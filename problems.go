@@ -21,3 +21,12 @@ func SchwefelsDoubleSum(xs []float64) float64 {
 	}
 	return t
 }
+
+func Rosenbrock(xs []float64) float64 {
+	var t float64
+	for i := 0; i < len(xs) - 1; i++ {
+		a, b := xs[i+1] - xs[i]*xs[i], xs[i] - 1
+		t += 100*a*a + b*b
+	}
+	return t
+}
