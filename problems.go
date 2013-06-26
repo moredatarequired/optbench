@@ -1,5 +1,9 @@
 package optbench
 
+import (
+	"math"
+)
+
 // Produce f(x0) + f(x1) + ... + f(xn).
 func SumOver(xs []float64, f func (float64) float64) float64 {
 	var t float64
@@ -29,4 +33,9 @@ func Rosenbrock(xs []float64) float64 {
 		t += 100*a*a + b*b
 	}
 	return t
+}
+
+func Rastrigin(xs []float64) float64 {
+	f := func (x float64) float64 { return x*x - 10*math.Cos(2*math.Pi*x) }
+	return SumOver(xs, f) + 10.0 * float64(len(xs))
 }
