@@ -39,3 +39,19 @@ func Rastrigin(xs []float64) float64 {
 	f := func (x float64) float64 { return x*x - 10*math.Cos(2*math.Pi*x) }
 	return SumOver(xs, f) + 10.0 * float64(len(xs))
 }
+
+func Schwefel(xs []float64) float64 {
+	m := 418.9828872724338
+	f := func (x float64) float64 {
+		return x * math.Sin(math.Pow(math.Abs(x), 0.5))
+	}
+	return SumOver(xs, f) + m * float64(len(xs))
+}
+
+func Ackley(xs []float64) float64 {
+	f1 := func (x float64) float64 { return x*x }
+	a := math.Exp(-0.2 * math.Pow(SumOver(xs, f1) / float64(len(xs)), 0.5))
+	f2 := func (x float64) float64 { return math.Cos(2*math.Pi*x) }
+	b := math.Exp(SumOver(xs, f2) / float64(len(xs)))
+	return 20 + math.E - 20*a - b
+}
