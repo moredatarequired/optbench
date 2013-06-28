@@ -49,9 +49,10 @@ func Schwefel(xs []float64) float64 {
 }
 
 func Ackley(xs []float64) float64 {
+	p := float64(len(xs))
 	f1 := func (x float64) float64 { return x*x }
-	a := math.Exp(-0.2 * math.Pow(SumOver(xs, f1) / float64(len(xs)), 0.5))
+	a := math.Exp(-0.2 * math.Pow(SumOver(xs, f1) / p, 0.5))
 	f2 := func (x float64) float64 { return math.Cos(2*math.Pi*x) }
-	b := math.Exp(SumOver(xs, f2) / float64(len(xs)))
+	b := math.Exp(SumOver(xs, f2) / p)
 	return 20 + math.E - 20*a - b
 }
