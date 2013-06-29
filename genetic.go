@@ -65,21 +65,24 @@ func NewPopulation(d, k int) *Population {
 	for i := range pop.Members {
 		pop.Members[i] = NewIndividual(d)
 	}
-	pop.sigma = 0.25
+	pop.Fittest = 10000000.0
+	pop.sigma = 0.1
 	return pop
 }
 
 type EvalFn func ([]float64) float64
 
-func (pop *Population) Evaluate(f EvalFn) {
+func (pop *Population) Evaluate(f EvalFn) float64 {
 	pop.age += 1
-	fittest := f(pop.Members[len(pop.Members) - 1].Genes)
+	fittest := f(pop.Members[0].Genes)
 	for _, m := range pop.Members {
 		m.Fitness = f(m.Genes)
 		if m.Fitness < fittest {
 			fittest = m.Fitness
-			pop.Fittest = fittest
-			pop.age = 0
+			if m.Fitness < pop.Fittest {
+				pop.Fittest = m.Fitness
+				pop.age = 0
+			}
 		}
 	}
 	delta := 1 - fittest
@@ -92,6 +95,7 @@ func (pop *Population) Evaluate(f EvalFn) {
 		m.Fitness /= total
 	}
 	sort.Sort(pop)
+	return fittest
 }
 
 func (p *Population) Len() int {
@@ -134,9 +138,10 @@ func Epoch(pop *Population) {
 	novel := int(0.9 * float64(len(ms)))
 	curve := pop.FitnessCurve()
 	var children Population
-	if (pop.age > 10) {
+	if (pop.age > 3) {
 		pop.sigma *= 0.99
 		pop.age = 0
+		fmt.Println("Reducing sigma to", pop.sigma)
 	}
 	for i := 0; i < bred; i++ {
 		a, b := curve.RouletteSelection(), curve.RouletteSelection()
